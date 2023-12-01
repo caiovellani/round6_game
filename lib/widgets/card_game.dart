@@ -1,17 +1,18 @@
-import 'dart:async';
 import 'dart:math';
-
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:round_6/constants.dart';
+import 'package:round_6/controllers/game_controller.dart';
+import 'package:round_6/models/game_options.dart';
 import 'package:round_6/theme.dart';
 
 class CardGame extends StatefulWidget {
   final Modo modo;
-  final int option;
+  final GameOptions gameOptions;
 
   const CardGame({
     required this.modo,
-    required this.option,
+    required this.gameOptions,
     super.key,
   });
 
@@ -39,19 +40,29 @@ class _CardGameState extends State<CardGame>
   }
 
   flipCard() {
-    if (!animation.isAnimating) {
+    final game = context.read<GameController>();
+
+    if (!animation.isAnimating &&
+        !widget.gameOptions.matched &&
+        !widget.gameOptions.selected &&
+        !game.gameCompleted) {
       animation.forward();
-      Timer(const Duration(seconds: 2), () => animation.reverse());
+      game.choose(widget.gameOptions, resetCard);
     }
+  }
+
+  resetCard() {
+    animation.reverse();
   }
 
   AssetImage getImage(double angulo) {
     if (angulo > 0.5 * pi) {
-      return AssetImage('assets/images/${widget.option.toString()}.png');
+      return AssetImage(
+          'assets/images/${widget.gameOptions.option.toString()}.png');
     } else {
       return widget.modo == Modo.normal
           ? const AssetImage('assets/images/card_normal.png')
-          : const AssetImage('assets/images/card_round6.png');
+          : const AssetImage('assets/images/card_round.png');
     }
   }
 

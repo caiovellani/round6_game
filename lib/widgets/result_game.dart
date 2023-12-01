@@ -1,26 +1,23 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:round_6/constants.dart';
+import 'package:round_6/controllers/game_controller.dart';
 import 'package:round_6/widgets/start_button.dart';
 
 class ResultGame extends StatelessWidget {
   final Resultado resultado;
 
-  const ResultGame({
-    required this.resultado,
-    super.key,
-  });
+  const ResultGame({Key? key, required this.resultado}) : super(key: key);
 
   String getResultado() {
-    return resultado == Resultado.aprovado ? 'Aprovado' : 'Eliminado';
+    return resultado == Resultado.aprovado ? 'aprovado' : 'eliminado';
   }
 
   @override
   Widget build(BuildContext context) {
+    final controller = context.read<GameController>();
     return Padding(
-      padding: const EdgeInsets.symmetric(
-        vertical: 60,
-        horizontal: 12,
-      ),
+      padding: const EdgeInsets.symmetric(vertical: 60, horizontal: 12),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
@@ -30,18 +27,18 @@ class ResultGame extends StatelessWidget {
           ),
           Padding(
             padding: const EdgeInsets.symmetric(vertical: 30),
-            child: Image.asset('images/${getResultado()}.png'),
+            child: Image.asset('assets/images/${getResultado()}.png'),
           ),
           resultado == Resultado.eliminado
               ? StartButton(
-                  title: 'Tentar Novamente',
+                  title: 'Tentar novamente',
                   color: Colors.white,
-                  action: () => {},
+                  action: () => controller.restartGame(),
                 )
               : StartButton(
                   title: 'Próximo Nível',
                   color: Colors.white,
-                  action: () => {},
+                  action: () => controller.nextLevel(),
                 ),
         ],
       ),

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:round_6/constants.dart';
+import 'package:round_6/game_settings.dart';
+import 'package:round_6/models/game_play.dart';
 import 'package:round_6/widgets/level_card.dart';
 
 class LevelPage extends StatelessWidget {
@@ -12,6 +14,11 @@ class LevelPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final levels = GameSettings.levels
+        .map((n) => LevelCard(
+              gamePlay: GamePlay(modo: modo, level: n),
+            ))
+        .toList();
     return Scaffold(
       appBar: AppBar(
         title: const Text('Nível do Jogo'),
@@ -23,11 +30,7 @@ class LevelPage extends StatelessWidget {
           mainAxisSpacing: 20,
           crossAxisSpacing: 20,
           padding: const EdgeInsets.all(24),
-          children: [
-            LevelCard(modo: modo, nivel: 6),
-            LevelCard(modo: modo, nivel: 8),
-            LevelCard(modo: modo, nivel: 12),
-          ],
+          children: levels,
         ),
       ),
     );
