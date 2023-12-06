@@ -3,6 +3,7 @@ import 'package:round_6/constants.dart';
 import 'package:round_6/game_settings.dart';
 import 'package:round_6/models/game_options.dart';
 import 'package:round_6/models/game_play.dart';
+import 'package:round_6/repositories/records_repository.dart';
 
 part 'game_controller.g.dart';
 
@@ -26,6 +27,18 @@ abstract class GameControllerBase with Store {
   List<Function> _choiceCallback = [];
   int _matches = 0;
   int _numPairs = 0;
+  RecordsRepository recordsRepository;
+
+  GameControllerBase({required this.recordsRepository}) {
+    reaction(
+      (_) => win == true,
+      (bool won) {
+        if (won) {
+          recordsRepository.updateRecords(gamePlay: _gamePlay, score: score);
+        }
+      },
+    );
+  }
 
   @computed
   bool get gameCompleted => (_choice.length == 2);
